@@ -150,3 +150,4 @@ Tested and verified on:
 - Login page loads in under 3 seconds (per NFR-002)
 - Optimized production build with code splitting
 - Lazy loading for routes
+- Proper loading in all instances.
