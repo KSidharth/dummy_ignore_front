@@ -103,7 +103,7 @@ function WelcomePage() {
           {/* Additional Content */}
           <div className="border-t border-gray-200 pt-8 mt-8">
             <p className="text-gray-600">
-              You have successfully authenticated and accessed the protected welcome page.
+              You have successfully authenticated and accessed the protected welcome/login page.
             </p>
           </div>
         </div>
