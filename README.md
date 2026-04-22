@@ -151,3 +151,4 @@ Tested and verified on:
 - Optimized production build with code splitting
 - Lazy loading for routes
 - Proper loading in all instances.
+- Made changes to Readme of Frontend
