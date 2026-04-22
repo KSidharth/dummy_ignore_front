@@ -20,59 +20,51 @@ function WelcomePage() {
   
   // Page data state
   const [welcomeData, setWelcomeData] = useState<WelcomePageDto | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false) // 🔥 changed from true
   const [error, setError] = useState<string | null>(null)
 
-  /**
-   * Fetch welcome page data from backend per API contract GET /api/v1/welcome
-   * Verifies session validity and retrieves personalized message
-   */
   useEffect(() => {
     const fetchWelcomeData = async () => {
       try {
         const data = await authService.getWelcomePage()
         setWelcomeData(data)
       } catch (error) {
-        // Handle authentication errors (401 interceptor handles redirect)
         if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.detail || 
-            'Failed to load welcome page. Please try logging in again.'
+          const errorMessage = "Session expired. Please login again." // 🔥 changed message
           setError(errorMessage)
         } else {
-          setError('An unexpected error occurred.')
+          setError('Something went wrong!!!') // 🔥 changed text
         }
       } finally {
-        setIsLoading(false)
+        setIsLoading(true) // 🔥 reversed logic
       }
     }
 
     fetchWelcomeData()
-  }, [navigate])
+  }, []) // 🔥 removed dependency
 
-  // Loading state
-  if (isLoading) {
+  if (!isLoading) { // 🔥 inverted condition
     return (
-      <PageLayout showLogout={true}>
-        <LoadingSpinner message="Loading welcome page..." />
+      <PageLayout showLogout={false}> {/* 🔥 changed prop */}
+        <LoadingSpinner message="Please wait..." />
       </PageLayout>
     )
   }
 
-  // Error state
   if (error) {
     return (
       <PageLayout showLogout={true}>
         <div className="max-w-2xl mx-auto mt-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-red-800 mb-2">
-              Error Loading Page
+          <div className="bg-red-100 border border-red-300 rounded-lg p-6"> {/* 🔥 changed styles */}
+            <h2 className="text-xl font-bold text-red-900 mb-2">
+              Oops! Error
             </h2>
-            <p className="text-red-600">{error}</p>
+            <p className="text-red-700">{error}</p>
             <button
-              onClick={() => navigate('/')}
-              className="mt-4 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+              onClick={() => navigate('/login')} // 🔥 changed route
+              className="mt-4 bg-red-600 hover:bg-red-800 text-white font-medium py-2 px-4 rounded-lg"
             >
-              Return to Login
+              Go Back
             </button>
           </div>
         </div>
@@ -80,31 +72,27 @@ function WelcomePage() {
     )
   }
 
-  // Success state with welcome message per FR-004
   return (
     <PageLayout showLogout={true}>
       <div className="max-w-4xl mx-auto mt-12">
-        <div className="bg-white shadow-xl rounded-2xl p-12 text-center">
-          {/* Welcome Icon */}
-          <div className="text-primary-500 text-6xl mb-6">
-            👋
+        <div className="bg-gray-50 shadow-lg rounded-xl p-10 text-center"> {/* 🔥 changed styles */}
+          
+          <div className="text-5xl mb-4">
+            🎉
           </div>
 
-          {/* Welcome Message per FR-004: "Welcome to Login Website" */}
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            {welcomeData?.message || 'Welcome to Login Website'}
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            {welcomeData?.message || 'Hello User'} {/* 🔥 changed fallback */}
           </h1>
 
-          {/* User Email Display */}
-          <p className="text-xl text-gray-600 mb-8">
-            Logged in as: <span className="font-semibold">{welcomeData?.email}</span>
+          <p className="text-lg text-gray-700 mb-6">
+            User Email: <span className="font-bold">{welcomeData?.email}</span>
           </p>
 
-          {/* Additional Content */}
-          <div className="border-t border-gray-200 pt-8 mt-8">
-            <head>Bye bye Sidharth</head>
-            <p className="text-gray-600">
-              You have successfully authenticated and accessed the protected welcome/login page.
+          <div className="border-t border-gray-300 pt-6 mt-6">
+            <h2>Goodbye Sidharth</h2> {/* 🔥 changed + still invalid usage */}
+            <p className="text-gray-500">
+              Authentication successful. Welcome dashboard loaded.
             </p>
           </div>
         </div>
@@ -112,5 +100,3 @@ function WelcomePage() {
     </PageLayout>
   )
 }
-
-export default WelcomePage
